@@ -1,4 +1,4 @@
-package tools
+package hashing
 
 import "golang.org/x/crypto/bcrypt"
 
@@ -7,7 +7,7 @@ func HashPassword(password string) (string, error) {
 	return string(hash), err
 }
 
-func VerifyPassword(hash, password string) bool {
+func VerifyPassword(hash, password string) error {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-	return err == nil
+	return err
 }
