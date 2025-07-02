@@ -1,0 +1,46 @@
+# Makefile
+
+FRONTEND_DIR=frontend_admin
+BACKEND_DIR = backend
+STATIC_DIR=$(BACKEND_DIR)/ui/static
+GO_MAIN=$(BACKEND_DIR)/cmd/main.go
+BIN=blog_server
+
+.PHONY: build_windows build_linux frontend_windows frontend_linux backend clean_windows clean_linux run_windows run_linux
+
+# --- FRONTEND ---
+frontend-windows:
+	cd $(FRONTEND_DIR) && pnpm install && pnpm build
+	powershell -Command "if (!(Test-Path $(STATIC_DIR))) { New-Item -ItemType Directory -Path $(STATIC_DIR) }"
+	powershell -Command "Remove-Item -Recurse -Force $(STATIC_DIR)\*"
+	powershell -Command "Copy-Item -Recurse -Force $(FRONTEND_DIR)\dist\* $(STATIC_DIR)"
+
+frontend-linux:
+	cd $(FRONTEND_DIR) && pnpm install && pnpm build
+	rm -rf $(STATIC_DIR)/*
+	cp -r $(FRONTEND_DIR)/dist/* $(STATIC_DIR)/
+
+# --- BACKEND ---
+backend:
+	cd $(BACKEND_DIR) && go build -ldflags="-s -w" -o $(BIN) ./cmd/main.go
+
+# --- CLEAN ---
+clean-windows:
+	powershell -Command "if (Test-Path $(STATIC_DIR)) { Remove-Item -Recurse -Force $(STATIC_DIR)\* }"
+	powershell -Command "if (Test-Path $(BIN)) { Remove-Item -Force $(BIN) }"
+
+clean-linux:
+	rm -rf $(STATIC_DIR)/*
+	rm -f $(BIN)
+
+# --- BUILD ---
+build-windows: frontend_windows backend
+
+build-linux: frontend_linux backend
+
+# --- RUN ---
+run-windows: build_windows
+	./backend/$(BIN)
+
+run-linux: build_linux
+	./backend/$(BIN)
