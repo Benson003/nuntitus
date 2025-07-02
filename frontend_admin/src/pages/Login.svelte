@@ -1,24 +1,44 @@
 <script lang="ts">
     import Button from "../components/base/Button.svelte";
     import Container from "../components/base/Container.svelte";
-    import Inputs from "../components/base/Inputs.svelte";
+    import TextInput from "../components/base/inputs/TextInput.svelte";
+    import PasswordInput from "../components/base/inputs/PasswordInput.svelte";
+    import { push } from "svelte-spa-router";
 
     let username = $state("");
     let password = $state("");
-</script>
-<h1 class="text-3xl font-extrabold text-center text-black dark:text-white">
-    Welcome Back
-</h1>
-<Container>
-    <div class="w-full max-w-md mx-auto p-8 space-y-6 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
 
+    function handleSubmit() {
+        if(username != "" && password != ""){
+        console.log("Username:", username);
+        console.log("Password:", password);
+        // TODO: Hook into your auth system
+        push(`/`)
+    }
+    }
+</script>
+
+<Container
+    class="flex flex-col items-center justify-center p-6 w-svw h-svh bg-white dark:bg-gray-950"
+>
+    <div
+        class="w-full max-w-md p-8 rounded-xl shadow-xl bg-gray-100 dark:bg-gray-900"
+    >
+        <h1
+            class="text-3xl font-extrabold text-center mb-6 text-gray-900 dark:text-gray-100"
+        >
+            Welcome Back
+        </h1>
 
         <div class="space-y-4">
-            <Inputs label="Username" type="text" value={username} />
-            <Inputs label="Password" type="password" value={password} />
+            <TextInput label="Username" value={username} onInput={(v) => username = v}></TextInput>
+            <PasswordInput label="Password" value={password} onInput={(v) => password = v}></PasswordInput>
         </div>
 
-        <Button class="w-full transition-transform duration-150 hover:scale-105 active:scale-95">
+        <Button
+            class="w-full mt-6 bg-blue-500 hover:bg-blue-600 text-white transition-transform duration-150 hover:scale-105 active:scale-95"
+            onClick={handleSubmit}
+        >
             Submit
         </Button>
     </div>

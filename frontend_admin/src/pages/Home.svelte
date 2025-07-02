@@ -2,7 +2,7 @@
 
     import Container from "../components/base/Container.svelte";
     import Button from "../components/base/Button.svelte";
-    import Inputs from "../components/base/Inputs.svelte";
+    import Inputs from "../components/base/inputs/TextInput.svelte";
     import Link from "../components/base/Links.svelte";
 
     import HXL from "../components/typography/HXL.svelte";
