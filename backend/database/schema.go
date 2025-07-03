@@ -9,22 +9,23 @@ import (
 )
 
 /*
-This file defines the schema for my data base
-Users Table and Blog Table
-The init method spins up a sqlite db but
-plans in later versions to add support for postgres
+This file defines the schema for the database:
+- Users table
+- Blogs table
+
+Currently uses SQLite for simplicity,
+with plans to add Postgres support later.
 */
 
-//This is a ponter to the db object
-
+// DBObject wraps the GORM DB pointer and any initialization error.
+// This makes it easy to pass around and check DB health.
 type DBObject struct {
 	DB    *gorm.DB
 	Error error
 }
 
-// This is the user table for logins
-// I plan to later intrgrate oauth
-// but im stcking with jwt for now
+// UserTable represents registered users in the system.
+// Sticking with JWT for now, may add OAuth in the future.
 type UserTable struct {
 	UserID       uuid.UUID `json:"user_id" gorm:"type:uuid;primaryKey;unique"`
 	Username     string    `json:"username" gorm:"unique"`
@@ -36,9 +37,8 @@ type UserTable struct {
 	UpdatedAt    time.Time `json:"updated_at"`
 }
 
-// The blogs table
-// No real explaning to do here
-// May later add metrics as a seprate table
+// BlogTable represents individual blogs created by users.
+// May later add metrics as a separate table if needed.
 type BlogTable struct {
 	BlogID      uuid.UUID `json:"blog_id" gorm:"type:uuid;primaryKey;unique"`
 	Title       string    `json:"title"`
@@ -49,11 +49,13 @@ type BlogTable struct {
 	PublishTime time.Time `json:"publish_time"`
 	UserID      uuid.UUID `json:"user_id"`
 	User        UserTable `json:"user" gorm:"foreignKey:UserID;references:UserID"`
-	FilePath	string
 }
 
-// This inits the data base
-// I swear i didnt know where else to put this
+// InitDataBase inits the SQLite database and auto-migrates tables.
+// Use this on app startup, or you won't get a usable DB (trust me).
+// It returns a DBObject that wraps the GORM DB and the error (if any).
+// Yeah, I return errors this way. Feels natural, don’t ask.
+// TODO: Write a proper way of making this integrate with multiple DataBases(including wrappers for clod providers if possible)
 func InitDataBase(dbPath string) *DBObject {
 	db, err := gorm.Open(sqlite.Open(dbPath), &gorm.Config{})
 	if err != nil {

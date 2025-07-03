@@ -3,7 +3,7 @@
     import Button from "../components/base/Button.svelte";
     import TextInput from "../components/base/inputs/TextInput.svelte";
     import PasswordInput from "../components/base/inputs/PasswordInput.svelte";
-    import Link from "../components/base/Links.svelte";
+    import Links from "../components/base/Links.svelte";
 
     import HXL from "../components/typography/HXL.svelte";
     import HL from "../components/typography/HL.svelte";
@@ -60,6 +60,7 @@
 
     <!-- Link Demo -->
     <div class="text-center">
-        <Link href="https://www.google.com" newTab>Visit Google</Link>
+        <Links href="https://www.google.com" newTab>Visit Google</Links>
+        <Links href="/#/home"> Hello There</Links>
     </div>
 </Container>

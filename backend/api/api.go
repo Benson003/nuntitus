@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/Benson003/nuntius/database"
-	"github.com/golang-jwt/jwt/v5"
+
 	"github.com/google/uuid"
 )
 
@@ -39,13 +39,22 @@ func respondJSON(w http.ResponseWriter, status int, payload interface{}) {
     json.NewEncoder(w).Encode(payload)
 }
 
-func GenerateJWT(userID uuid.UUID) (string, error) {
-    claims := jwt.MapClaims{
-        "sub": userID.String(),                       // subject claim as userID
-        "exp": time.Now().Add(JWTExpiryTime).Unix(),  // expiry
-        "iat": time.Now().Unix(),                     // issued at
-    }
+type UpdateUserRequest struct {
+	Username string `json:"username,omitempty"` // optional new username
+	Email    string `json:"email,omitempty"`    // optional new email
+	Password string `json:"password,omitempty"` // optional new password
+}
 
-    token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-    return token.SignedString(jwtSecret)
+type CreateBlogRequest struct {
+    Title       string    `json:"title"`
+    Summary     string    `json:"summary"`
+    PublishTime time.Time `json:"publish_time"`
+    Visibility  bool      `json:"visibility"`
+}
+
+type UpdateBlogRequest struct {
+    Title       string    `json:"title,omitempty"`
+    Summary     string    `json:"summary,omitempty"`
+    PublishTime time.Time `json:"publish_time,omitempty"`
+    Visibility  *bool     `json:"visibility,omitempty"`
 }

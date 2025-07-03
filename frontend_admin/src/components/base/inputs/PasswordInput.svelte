@@ -28,8 +28,8 @@
     {label}
     <input
         type={inputType}
-        {value}
-        {placeholder}
+        value={value}
+        placeholder={placeholder}
         oninput={handleInput}
         class={`w-full p-2 rounded-md border border-gray-400 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-md ${className}`}
     />

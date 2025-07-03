@@ -23,9 +23,9 @@
 <label class="block m-4 text-sm font-bold text-black dark:text-white">
     {label}
     <input
-        {type}
-        {value}
-        {placeholder}
+        type={type}
+        value ={value}
+        placeholder={placeholder}
         oninput={handleInput}
         class={`
         w-full p-2 rounded-md border border-gray-400 dark:border-gray-700

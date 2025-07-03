@@ -4,6 +4,7 @@
     import TextInput from "../components/base/inputs/TextInput.svelte";
     import PasswordInput from "../components/base/inputs/PasswordInput.svelte";
     import { push } from "svelte-spa-router";
+    import Links from "../components/base/Links.svelte";
 
     let username = $state("");
     let password = $state("");
@@ -13,7 +14,7 @@
         console.log("Username:", username);
         console.log("Password:", password);
         // TODO: Hook into your auth system
-        push(`/`)
+        push(`/home`)
     }
     }
 </script>
@@ -42,4 +43,5 @@
             Submit
         </Button>
     </div>
+    <Links href="/#/signup">Sign Up</Links>
 </Container>

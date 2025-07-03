@@ -6,7 +6,7 @@
     import { push } from "svelte-spa-router";
 
     function goHome() {
-        push(`/`);
+        push(`/home`);
     }
 </script>
 

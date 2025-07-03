@@ -42,6 +42,10 @@ func (b *BlogBuilder) SetPublishTime(publish_time time.Time) *BlogBuilder {
 	b.Blog.PublishTime = publish_time
 	return b
 }
+func (b *BlogBuilder) SetUserID(user_id uuid.UUID) *BlogBuilder {
+	b.Blog.UserID = user_id
+	return b
+}
 
 func (b *BlogBuilder) Build() BlogTable {
 	return b.Blog
