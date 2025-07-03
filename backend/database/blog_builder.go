@@ -3,6 +3,7 @@ package database
 import (
 	"time"
 
+	"github.com/Benson003/nuntius/tools/files"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -44,6 +45,11 @@ func (b *BlogBuilder) SetPublishTime(publish_time time.Time) *BlogBuilder {
 }
 func (b *BlogBuilder) SetUserID(user_id uuid.UUID) *BlogBuilder {
 	b.Blog.UserID = user_id
+	return b
+}
+
+func (b *BlogBuilder) SetContent(content string) *BlogBuilder {
+	files.UploadFile(b.Blog.UserID, []byte(content))
 	return b
 }
 

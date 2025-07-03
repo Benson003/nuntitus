@@ -2,7 +2,6 @@ package database
 
 import (
 	"time"
-
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -23,7 +22,6 @@ func (db *DBObject) CreateBlog(user_id uuid.UUID, title string, summary string, 
 		SetPublishTime(publish_time).
 		SetVisiblity(visiblity).
 		SetUserID(user_id)
-
 
 	f_blog := blog.Build()
 	if err := db.DB.Create(&f_blog).Error; err != nil {
@@ -76,8 +74,10 @@ func (db *DBObject) UpdateBlog(user_id uuid.UUID, blog_id uuid.UUID, title strin
 	if summary != "" {
 		blog.SetSummary(summary)
 	}
+
 	blog.SetVisiblity(visiblity)
 	blog.SetPublishTime(publish_time)
+
 	f_blog := blog.Build()
 
 	if err := db.DB.Save(&f_blog).Error; err != nil {

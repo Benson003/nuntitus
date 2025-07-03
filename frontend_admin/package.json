@@ -11,13 +11,19 @@
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^5.1.0",
+    "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.1.11",
     "@tsconfig/svelte": "^5.0.4",
+    "autoprefixer": "^10.4.21",
+    "prismjs": "^1.30.0",
     "svelte": "^5.34.7",
     "svelte-check": "^4.2.2",
     "svelte-spa-router": "^4.0.1",
     "tailwindcss": "^4.1.11",
     "typescript": "~5.8.3",
     "vite": "^7.0.0"
+  },
+  "dependencies": {
+    "marked": "^16.0.0"
   }
 }

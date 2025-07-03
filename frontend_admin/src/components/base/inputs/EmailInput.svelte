@@ -7,12 +7,14 @@
         placeholder = "",
         type = "email",
         onInput,
+        disabled = false,
         class: className = "",
     } = $props<{
         label?: string;
         value?: string;
         placeholder?: string;
         type?: string;
+        disabled?: boolean;
         onInput?: (v: string) => void;
         class?: string;
     }>();
@@ -23,14 +25,14 @@
         const value = input.value;
         if (isValidEmail(value) && value != "") {
             onInput?.(value);
-            is_valid_email = true
-            display_text="Valid email address"
-        } else if(value === "") {
-            is_valid_email = false
-            display_text = "No email entered"
-        }else {
-            is_valid_email = false
-            display_text = "Invalid email format must follow 'test@mail.com'"
+            is_valid_email = true;
+            display_text = "Valid email address";
+        } else if (value === "") {
+            is_valid_email = false;
+            display_text = "No email entered";
+        } else {
+            is_valid_email = false;
+            display_text = "Invalid email format must follow 'test@mail.com'";
         }
     }
 
@@ -46,6 +48,7 @@
         {type}
         {value}
         {placeholder}
+        {disabled}
         oninput={handleInput}
         class={`
         w-full p-2 rounded-md border border-gray-400 dark:border-gray-700
@@ -54,4 +57,6 @@
       `}
     />
 </label>
-<Ps class={is_valid_email? "text-green-600": "text-red-600"}>{display_text}</Ps>
+<Ps class={is_valid_email ? "text-green-600" : "text-red-600"}
+    >{display_text}</Ps
+>

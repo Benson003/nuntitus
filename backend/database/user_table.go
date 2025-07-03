@@ -25,9 +25,9 @@ func (u *UserTable) BeforeUpdate(tx *gorm.DB) (err error) {
 func (db *DBObject) CreateUser(username string, hashed_password string, email string) (*UserTable, error) {
 	user := NewUserBuilder()
 	user.SetUsername(username).
-	SetEmail(email).
-	SetPasswordHash(hashed_password)
-	
+		SetEmail(email).
+		SetPasswordHash(hashed_password)
+
 	f_user := user.Build()
 
 	if err := db.DB.Create(&f_user).Error; err != nil {
@@ -54,6 +54,13 @@ func (db *DBObject) GetUserByEmail(email string) (*UserTable, error) {
 func (db *DBObject) GetUserByUsername(username string) (*UserTable, error) {
 	var user UserTable
 	if err := db.DB.Where("username = ?", username).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+func (db *DBObject) GetUserByUsernameOrEmail(username string, email string) (*UserTable, error) {
+	var user UserTable
+	if err := db.DB.Where("username = ? OR email = ?", username, email).First(&user).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil

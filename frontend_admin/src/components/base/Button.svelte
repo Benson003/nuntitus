@@ -2,15 +2,18 @@
     let {
         onClick,
         children,
-        class:className = "",
+        class: className = "",
+        disabled = false,
     } = $props<{
         onClick?: () => void;
         children?: () => any;
+        disabled?: boolean;
         class?: string;
     }>();
 </script>
 
 <button
+    {disabled}
     onclick={(e) => {
         e.stopPropagation();
         e.preventDefault();

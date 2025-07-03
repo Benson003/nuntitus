@@ -30,7 +30,7 @@ func (h *Handler) CreateBlogHandler(w http.ResponseWriter, r *http.Request) {
 		respondJSON(w, http.StatusInternalServerError, MessageResponse{Type: TypeFailure, Message: "failed to create blog"})
 		return
 	}
-	respondJSON(w, http.StatusCreated, blog)
+	respondJSON(w, http.StatusCreated, MessageResponse{Type: TypeSuccess, Message: "created blog data", Data: map[string]interface{}{"blog_id": blog.BlogID}})
 }
 
 func (h *Handler) UpdateBlogHandler(w http.ResponseWriter, r *http.Request) {
@@ -64,7 +64,9 @@ func (h *Handler) UpdateBlogHandler(w http.ResponseWriter, r *http.Request) {
 		respondJSON(w, http.StatusInternalServerError, MessageResponse{Type: TypeFailure, Message: "failed to update blog"})
 		return
 	}
-	respondJSON(w, http.StatusOK, updatedBlog)
+	respondJSON(w, http.StatusOK, map[string]interface{}{
+		"blog_id": updatedBlog.BlogID,
+	})
 }
 
 func (h *Handler) DeleteBlogHandler(w http.ResponseWriter, r *http.Request) {

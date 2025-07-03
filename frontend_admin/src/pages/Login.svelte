@@ -3,19 +3,45 @@
     import Container from "../components/base/Container.svelte";
     import TextInput from "../components/base/inputs/TextInput.svelte";
     import PasswordInput from "../components/base/inputs/PasswordInput.svelte";
-    import { push } from "svelte-spa-router";
     import Links from "../components/base/Links.svelte";
+    import Loading from "../components/base/Loading.svelte";
 
-    let username = $state("");
-    let password = $state("");
+    import { push } from "svelte-spa-router";
+    import { jwt } from "../lib/authStore";
+    import { loginUser } from "../lib/api";
 
-    function handleSubmit() {
-        if(username != "" && password != ""){
-        console.log("Username:", username);
-        console.log("Password:", password);
-        // TODO: Hook into your auth system
-        push(`/home`)
-    }
+    import HXL from "../components/typography/HXL.svelte";
+    import PL from "../components/typography/PL.svelte";
+    import { onMount } from "svelte";
+
+    let username = "";
+    let password = "";
+    let error: string | null = null;
+    let loading = false;
+
+    onMount(() => {
+        if ($jwt) {
+            push("/dashboard");
+        }
+    });
+
+    async function handleSubmit() {
+        error = null;
+        if (username.trim() && password.trim()) {
+            loading = true;
+            try {
+                const token = await loginUser(username, password);
+                jwt.set(token);
+                push("/dashboard");
+            } catch (e) {
+                console.error(e);
+                error = "Invalid credentials or server error.";
+            } finally {
+                loading = false;
+            }
+        } else {
+            error = "Please enter both username and password.";
+        }
     }
 </script>
 
@@ -25,23 +51,51 @@
     <div
         class="w-full max-w-md p-8 rounded-xl shadow-xl bg-gray-100 dark:bg-gray-900"
     >
-        <h1
-            class="text-3xl font-extrabold text-center mb-6 text-gray-900 dark:text-gray-100"
-        >
+        <HXL class="text-center mb-6 text-gray-900 dark:text-gray-100">
             Welcome Back
-        </h1>
+        </HXL>
+
+        {#if error}
+            <PL class="text-center text-red-500 mb-2">{error}</PL>
+        {/if}
+
+        {#if loading}
+            <div class="flex justify-center my-4">
+                <Loading />
+            </div>
+        {/if}
 
         <div class="space-y-4">
-            <TextInput label="Username" value={username} onInput={(v) => username = v}></TextInput>
-            <PasswordInput label="Password" value={password} onInput={(v) => password = v}></PasswordInput>
+            <TextInput
+                label="Username"
+                value={username}
+                onInput={(v) => (username = v)}
+                disabled={loading}
+            />
+            <PasswordInput
+                label="Password"
+                value={password}
+                onInput={(v) => (password = v)}
+                disabled={loading}
+            />
         </div>
 
         <Button
-            class="w-full mt-6 bg-blue-500 hover:bg-blue-600 text-white transition-transform duration-150 hover:scale-105 active:scale-95"
+            class="w-full mt-6 bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 text-white transition-transform duration-150 hover:scale-105 active:scale-95"
             onClick={handleSubmit}
+            disabled={loading}
         >
-            Submit
+            {#if loading}
+                <Loading />
+            {:else}
+                Sign Up
+            {/if}
         </Button>
     </div>
-    <Links href="/#/signup">Sign Up</Links>
+
+    <div class="mt-4 text-center">
+        <Links href="/#/signup" class="text-blue-600 hover:underline">
+            Sign Up
+        </Links>
+    </div>
 </Container>

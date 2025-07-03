@@ -6,11 +6,8 @@ import (
 	"time"
 
 	"github.com/Benson003/nuntius/database"
-
-	"github.com/google/uuid"
 )
 
-var jwtSecret = []byte("your_secret_here")
 const (
 	JWTExpiryTime time.Duration = time.Hour * 24 * 31 // 31 days for theh token to expire
 	TypeSuccess   string        = "success"
@@ -22,9 +19,17 @@ type Handler struct {
 	DBObject *database.DBObject
 }
 
-type JWT struct {
-	AuthToken uuid.UUID `json:"auth_token"`
-	Timeout   int64     `json:"expiry"`
+// Login request format
+type LoginRequest struct {
+	UsernameOrEmail string `json:"username_or_email"`
+	Password        string `json:"password"`
+}
+
+// Sign up request format
+type SignUpRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Email    string `json:"email"`
 }
 
 type MessageResponse struct {
@@ -34,9 +39,9 @@ type MessageResponse struct {
 }
 
 func respondJSON(w http.ResponseWriter, status int, payload interface{}) {
-    w.Header().Set("Content-Type", "application/json")
-    w.WriteHeader(status)
-    json.NewEncoder(w).Encode(payload)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	json.NewEncoder(w).Encode(payload)
 }
 
 type UpdateUserRequest struct {
@@ -46,15 +51,15 @@ type UpdateUserRequest struct {
 }
 
 type CreateBlogRequest struct {
-    Title       string    `json:"title"`
-    Summary     string    `json:"summary"`
-    PublishTime time.Time `json:"publish_time"`
-    Visibility  bool      `json:"visibility"`
+	Title       string    `json:"title"`
+	Summary     string    `json:"summary"`
+	PublishTime time.Time `json:"publish_time"`
+	Visibility  bool      `json:"visibility"`
 }
 
 type UpdateBlogRequest struct {
-    Title       string    `json:"title,omitempty"`
-    Summary     string    `json:"summary,omitempty"`
-    PublishTime time.Time `json:"publish_time,omitempty"`
-    Visibility  *bool     `json:"visibility,omitempty"`
+	Title       string    `json:"title,omitempty"`
+	Summary     string    `json:"summary,omitempty"`
+	PublishTime time.Time `json:"publish_time,omitempty"`
+	Visibility  *bool     `json:"visibility,omitempty"`
 }

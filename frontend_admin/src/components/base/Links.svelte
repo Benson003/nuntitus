@@ -4,11 +4,13 @@
         children,
         newTab,
         class: className = "",
+        disabled = false,
     } = $props<{
         href: string;
         children: () => any;
         newTab?: boolean;
         class?: string;
+        disabled?: boolean;
     }>();
 </script>
 
@@ -30,22 +32,22 @@
         `}
     >{@render children()}
     {#if newTab}
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="lucide lucide-external-link"
-    >
-        <path
-            d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
-        />
-        <polyline points="15 3 21 3 21 9" />
-        <line x1="10" y1="14" x2="21" y2="3" />
-    </svg>
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-external-link"
+        >
+            <path
+                d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+            />
+            <polyline points="15 3 21 3 21 9" />
+            <line x1="10" y1="14" x2="21" y2="3" />
+        </svg>
     {/if}
 </a>

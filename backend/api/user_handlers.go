@@ -13,19 +13,6 @@ import (
 	"github.com/google/uuid"
 )
 
-// Login request format
-type LoginRequest struct {
-	UsernameOrEmail string `json:"username_or_email"`
-	Password        string `json:"password"`
-}
-
-// Sign up request format
-type SignUpRequest struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Email    string `json:"email"`
-}
-
 func (h *Handler) SignupHandler(w http.ResponseWriter, r *http.Request) {
 	r.Body = http.MaxBytesReader(w, r.Body, 1<<20) // 1 MB max
 
@@ -73,6 +60,7 @@ func (h *Handler) SignupHandler(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	// Decode the JSON body into LoginRequest
+	fmt.Println("Got the request")
 	var req LoginRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		respondJSON(w, http.StatusBadRequest, MessageResponse{
@@ -98,16 +86,9 @@ func (h *Handler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var user *database.UserTable
 
 	// Try fetching by email
-	userEmail, errEmail := h.DBObject.GetUserByEmail(req.UsernameOrEmail)
+	user, err := h.DBObject.GetUserByUsernameOrEmail(req.UsernameOrEmail, req.UsernameOrEmail)
 
-	// Try fetching by username if email fetch failed
-	userUsername, errUsername := h.DBObject.GetUserByUsername(req.UsernameOrEmail)
-
-	if errEmail == nil {
-		user = userEmail
-	} else if errUsername == nil {
-		user = userUsername
-	} else {
+	if err != nil {
 		// If both fail, the user was not found
 		respondJSON(w, http.StatusNotFound, MessageResponse{
 			Type:    TypeFailure,

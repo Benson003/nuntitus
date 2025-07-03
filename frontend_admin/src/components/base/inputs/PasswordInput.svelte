@@ -6,11 +6,13 @@
         value = "",
         placeholder = "",
         onInput,
+        disabled = false,
         class: className = "",
     } = $props<{
         label?: string;
         value?: string;
         placeholder?: string;
+        disabled?: boolean;
         onInput?: (v: string) => void;
         class?: string;
     }>();
@@ -28,9 +30,10 @@
     {label}
     <input
         type={inputType}
-        value={value}
-        placeholder={placeholder}
+        {value}
+        {placeholder}
         oninput={handleInput}
+        {disabled}
         class={`w-full p-2 rounded-md border border-gray-400 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-md ${className}`}
     />
 
