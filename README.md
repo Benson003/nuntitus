@@ -55,8 +55,7 @@ pnpm install
 pnpm dev
 ```
 
-- Backend runs on [http://localhost:3000](http://localhost:3000)
-- Frontend runs on [http://localhost:5173](http://localhost:5173) (default Vite port)
+- The Application runs on [http://localhost:3000](http://localhost:3000)
 
 ---
 
