@@ -1,0 +1,54 @@
+# OS and editor junk
+*.db
+
+# Logs
+*.log
+
+# Node dependencies recursively in monorepo
+**/node_modules/
+
+# Go binaries
+*.exe
+*.out
+*.test
+
+# Go build artifacts and temporary folders
+**/bin/
+**/build/
+**/dist/
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment files
+.env
+.env.*
+.env.local
+
+# Coverage and test output
+coverage/
+*.coverprofile
+
+# Frontend frameworks
+**/.svelte-kit/
+**/.next/
+**/.nuxt/
+
+# Swap and temp files
+*.swp
+*.tmp
+
+# Vite and other cache folders
+**/.vite/
+**/.cache/
+
+# Ignore all markdown files...
+*.md
+
+# ...EXCEPT important tracked ones
+!README.md
+!LICENSE.md
+!LICENSE
+!CHANGELOG.md
