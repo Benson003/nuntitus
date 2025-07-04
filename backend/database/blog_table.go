@@ -1,7 +1,9 @@
 package database
 
 import (
+	"fmt"
 	"time"
+
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -38,27 +40,48 @@ func (db *DBObject) GetBlogByID(user_id uuid.UUID, blog_id uuid.UUID) (*BlogTabl
 	return &blog, nil
 }
 
-func (db *DBObject) GetBlogsPaginated(user_id uuid.UUID, page int, count int) ([]*BlogTable, error) {
-	var blogs []*BlogTable
+func (db *DBObject) GetBlogsPaginated(
+	user_id uuid.UUID,
+	page int,
+	count int,
+) (blogs []*BlogTable, totalItems int64, totalPages int, numberOfElements int, err error) {
 
-	offset := (page - 1) * count
-	if offset < 0 {
-		offset = 0
+	if page < 1 {
+		err = fmt.Errorf("page must be >= 1")
+		return
+	}
+	if count < 1 {
+		err = fmt.Errorf("count must be >= 1")
+		return
 	}
 
-	err := db.DB.
+	// 1️⃣ Count total items
+	if err = db.DB.
+		Model(&BlogTable{}).
+		Where("user_id = ?", user_id).
+		Count(&totalItems).Error; err != nil {
+		return
+	}
+
+	// 2️⃣ Calculate total pages
+	totalPages = int((totalItems + int64(count) - 1) / int64(count))
+
+	// 3️⃣ Fetch page
+	offset := (page - 1) * count
+	err = db.DB.
 		Preload("User").
 		Where("user_id = ?", user_id).
 		Limit(count).
 		Offset(offset).
 		Order("created_at DESC").
 		Find(&blogs).Error
-
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	return blogs, nil
+	// 4️⃣ Return the number of elements fetched on this page
+	numberOfElements = len(blogs)
+	return
 }
 
 func (db *DBObject) UpdateBlog(user_id uuid.UUID, blog_id uuid.UUID, title string, summary string, visiblity bool, publish_time time.Time) (*BlogTable, error) {

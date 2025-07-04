@@ -42,7 +42,7 @@ func (h *Handler) SignupHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = h.DBObject.CreateUser(username, hash, email)
+	user, err := h.DBObject.CreateUser(username, hash, email)
 	if err != nil {
 		if strings.Contains(err.Error(), "UNIQUE constraint failed") { // SQLite detection
 			http.Error(w, "email or username already exists", http.StatusConflict)
@@ -52,15 +52,26 @@ func (h *Handler) SignupHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	tokenString, err := utils.GenerateJWT(user.UserID.String())
+	if err != nil {
+		respondJSON(w, http.StatusInternalServerError, MessageResponse{
+			Type:    TypeFailure,
+			Message: "failed to generate token",
+		})
+		return
+	}
 	respondJSON(w, http.StatusCreated, MessageResponse{
 		Type:    TypeSuccess,
 		Message: "user created successfully",
+		Data: map[string]interface{}{
+			"token": tokenString,
+		},
 	})
 }
 
 func (h *Handler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	// Decode the JSON body into LoginRequest
-	fmt.Println("Got the request")
+
 	var req LoginRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		respondJSON(w, http.StatusBadRequest, MessageResponse{
@@ -172,7 +183,7 @@ func (h *Handler) UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Update user in DB
-	updatedUser, err := h.DBObject.UpdateUser(userID, req.Username, hashedPassword, req.Email)
+	updatedUser, err := h.DBObject.UpdateUser(userID, req.Username, hashedPassword, req.Email, req.FirstName, req.LastName)
 	if err != nil {
 		respondJSON(w, http.StatusInternalServerError, MessageResponse{
 			Type:    TypeFailure,

@@ -14,6 +14,7 @@
     "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.1.11",
     "@tsconfig/svelte": "^5.0.4",
+    "@types/dompurify": "^3.2.0",
     "autoprefixer": "^10.4.21",
     "prismjs": "^1.30.0",
     "svelte": "^5.34.7",
@@ -24,6 +25,11 @@
     "vite": "^7.0.0"
   },
   "dependencies": {
-    "marked": "^16.0.0"
+    "dompurify": "^3.2.6",
+    "github-markdown-css": "^5.8.1",
+    "highlight.js": "^11.11.1",
+    "marked": "^16.0.0",
+    "marked-emoji": "^2.0.1",
+    "marked-gfm-heading-id": "^4.1.2"
   }
 }

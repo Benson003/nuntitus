@@ -89,6 +89,7 @@ func (h *Handler) DeleteBlogHandler(w http.ResponseWriter, r *http.Request) {
 		respondJSON(w, http.StatusInternalServerError, MessageResponse{Type: TypeFailure, Message: "failed to delete blog"})
 		return
 	}
+	files.DeleteFile(uid)
 	respondJSON(w, http.StatusOK, deletedBlog)
 }
 
@@ -133,12 +134,28 @@ func (h *Handler) FetchBlogsPaginatedHandler(w http.ResponseWriter, r *http.Requ
 		count = 10
 	}
 
-	blogs, err := h.DBObject.GetBlogsPaginated(uid, page, count)
+	blogs, totalItems, totalPages, numberOfElements, err := h.DBObject.GetBlogsPaginated(uid, page, count)
 	if err != nil {
-		respondJSON(w, http.StatusInternalServerError, MessageResponse{Type: TypeFailure, Message: "failed to fetch blogs"})
+		respondJSON(w, http.StatusInternalServerError, MessageResponse{
+			Type:    TypeFailure,
+			Message: "failed to fetch blogs",
+		})
 		return
 	}
-	respondJSON(w, http.StatusOK, blogs)
+
+	respondJSON(w, http.StatusOK, MessageResponse{
+		Type:    TypeSuccess,
+		Message: "blogs fetched successfully",
+		Data: map[string]interface{}{
+			"blogs":              blogs,
+			"total_items":        totalItems,
+			"total_pages":        totalPages,
+			"current_page":       page,
+			"page_size":          count,
+			"number_of_elements": numberOfElements,
+		},
+	})
+
 }
 
 func (h *Handler) FetchBlogMarkdownHandler(w http.ResponseWriter, r *http.Request) {
@@ -170,7 +187,7 @@ func (h *Handler) UploadBlogMarkdownHandler(w http.ResponseWriter, r *http.Reque
 	}
 
 	// Get blog_id from URL
-	blogIDStr := chi.URLParam(r, "blog_id")
+	blogIDStr := chi.URLParam(r, "blogID")
 	blogID, err := uuid.Parse(blogIDStr)
 	if err != nil {
 		respondJSON(w, http.StatusBadRequest, MessageResponse{

@@ -3,17 +3,18 @@
 
     // Default props via $props pattern
     // You can override these by passing props to the component
-    let { size = 6 }
-    let size: number = 6;
+    let { size = 6, intervalMs = 180 } = $props<{
+        size?: number;
+        intervalMs?: number;
+    }>();
     let colors: string[] = [
         "bg-blue-900",
         "bg-blue-600",
         "bg-cyan-400",
         "bg-blue-200",
     ];
-    let intervalMs: number = 180;
 
-    let active = 0;
+    let active = $state(0);
     const sequence = [0, 1, 2, 3, 2, 1];
 
     let idx = 0;

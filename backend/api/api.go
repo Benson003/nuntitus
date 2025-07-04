@@ -45,9 +45,11 @@ func respondJSON(w http.ResponseWriter, status int, payload interface{}) {
 }
 
 type UpdateUserRequest struct {
-	Username string `json:"username,omitempty"` // optional new username
-	Email    string `json:"email,omitempty"`    // optional new email
-	Password string `json:"password,omitempty"` // optional new password
+	Username  string `json:"username,omitempty"` // optional new username
+	Email     string `json:"email,omitempty"`    // optional new email
+	Password  string `json:"password,omitempty"` // optional new password
+	FirstName string `json:"first_name,omitempty"`
+	LastName  string `json:"last_name,omitempty"`
 }
 
 type CreateBlogRequest struct {

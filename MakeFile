@@ -1,12 +1,10 @@
-# Makefile
-
-FRONTEND_DIR=frontend_admin
+FRONTEND_DIR = frontend_admin
 BACKEND_DIR = backend
-STATIC_DIR=$(BACKEND_DIR)/ui/static
-GO_MAIN=$(BACKEND_DIR)/cmd/main.go
-BIN=blog_server
+STATIC_DIR = $(BACKEND_DIR)/ui/static
+GO_MAIN = $(BACKEND_DIR)/cmd/main.go
+BIN = blog_server
 
-.PHONY: build_windows build_linux frontend_windows frontend_linux backend clean_windows clean_linux run_windows run_linux
+.PHONY: build-windows build-linux frontend-windows frontend-linux backend-windows backend-linux clean-windows clean-linux run-windows run-linux
 
 # --- FRONTEND ---
 frontend-windows:
@@ -21,26 +19,29 @@ frontend-linux:
 	cp -r $(FRONTEND_DIR)/dist/* $(STATIC_DIR)/
 
 # --- BACKEND ---
-backend:
-	cd $(BACKEND_DIR) && go build -ldflags="-s -w" -o $(BIN) ./cmd/main.go
+backend-windows:
+	cd $(BACKEND_DIR) && go build -ldflags="-s -w" -o $(BIN).exe ./cmd/main.go && powershell -Command "Copy-Item $(BIN).exe ..\\$(BIN).exe"
+
+backend-linux:
+	cd $(BACKEND_DIR) && go build -ldflags="-s -w" -o $(BIN) ./cmd/main.go && cp $(BIN) ../$(BIN)
 
 # --- CLEAN ---
 clean-windows:
 	powershell -Command "if (Test-Path $(STATIC_DIR)) { Remove-Item -Recurse -Force $(STATIC_DIR)\* }"
-	powershell -Command "if (Test-Path $(BIN)) { Remove-Item -Force $(BIN) }"
+	powershell -Command "if (Test-Path $(BIN).exe) { Remove-Item -Force $(BIN).exe }"
 
 clean-linux:
 	rm -rf $(STATIC_DIR)/*
 	rm -f $(BIN)
 
 # --- BUILD ---
-build-windows: frontend_windows backend
+build-windows: frontend-windows backend-windows
 
-build-linux: frontend_linux backend
+build-linux: frontend-linux backend-linux
 
 # --- RUN ---
-run-windows: build_windows
-	./backend/$(BIN)
+run-windows: build-windows
+	./$(BIN).exe
 
-run-linux: build_linux
-	./backend/$(BIN)
+run-linux: build-linux
+	./$(BIN)

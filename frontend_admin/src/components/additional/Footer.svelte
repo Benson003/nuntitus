@@ -8,7 +8,7 @@
 </script>
 
 <footer
-    class="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 py-4 flex flex-col items-center space-y-2 select-none text-sm w-full absolute bottom-0 mt-2 mb-0 ml-0 mr-0"
+    class="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 py-4 flex flex-col items-center space-y-2 select-none text-sm w-full"
 >
     <div>
         <Links href={`mailto:${email}`} class="hover:underline">
@@ -16,7 +16,7 @@
         </Links>
     </div>
     <div>
-        &copy; {year}
-        {owner}. All rights reserved.
+        &copy; {year} {owner}. All rights reserved.
     </div>
 </footer>
+

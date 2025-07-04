@@ -49,3 +49,14 @@ func ReadFile(uuid uuid.UUID) ([]byte, error) {
 	}
 	return data, nil
 }
+func DeleteFile(uuid uuid.UUID) error {
+	if err := checkForFolder(); err != nil {
+		return err
+	}
+	filename := filepath.Join(MD_FOLDER, uuid.String()+".md")
+	err := os.Remove(filename)
+	if err != nil {
+		return fmt.Errorf("failed to delete file %s: %w", filename, err)
+	}
+	return nil
+}

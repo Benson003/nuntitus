@@ -46,7 +46,7 @@
 </script>
 
 <Container
-    class="flex flex-col items-center justify-center p-6 w-svw h-svh bg-white dark:bg-gray-950"
+    class="flex flex-col items-center justify-center p-6 w-full h-svh bg-white dark:bg-gray-950"
 >
     <div
         class="w-full max-w-md p-8 rounded-xl shadow-xl bg-gray-100 dark:bg-gray-900"
@@ -88,7 +88,7 @@
             {#if loading}
                 <Loading />
             {:else}
-                Sign Up
+                Log In
             {/if}
         </Button>
     </div>

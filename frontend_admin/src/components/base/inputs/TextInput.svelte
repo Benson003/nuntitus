@@ -7,6 +7,7 @@
         disabled = false,
         onInput,
         class: className = "",
+        requried = false,
     } = $props<{
         label?: string;
         value?: string;
@@ -15,6 +16,7 @@
         disabled?: boolean;
         onInput?: (v: string) => void;
         class?: string;
+        requried?: boolean;
     }>();
 
     function handleInput(e: Event) {
@@ -25,6 +27,7 @@
 <label class="block m-4 text-sm font-bold text-black dark:text-white">
     {label}
     <input
+        required={requried}
         {type}
         {value}
         {disabled}

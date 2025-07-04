@@ -77,7 +77,7 @@ func (db *DBObject) DeleteUser(user_id uuid.UUID) (*UserTable, error) {
 	return user, nil
 }
 
-func (db *DBObject) UpdateUser(user_id uuid.UUID, username string, password_hash string, email string) (*UserTable, error) {
+func (db *DBObject) UpdateUser(user_id uuid.UUID, username string, password_hash string, email string, first_name string, last_name string) (*UserTable, error) {
 	userBuilder := NewUserBuilder()
 
 	user, err := userBuilder.FetchUserToUpdate(db.DB, user_id)
@@ -86,6 +86,12 @@ func (db *DBObject) UpdateUser(user_id uuid.UUID, username string, password_hash
 	}
 	if username != "" {
 		user.SetUsername(username)
+	}
+	if first_name != "" {
+		user.SetFirstName(first_name)
+	}
+	if last_name != "" {
+		user.SetLastName(last_name)
 	}
 
 	if password_hash != "" {

@@ -1,7 +1,7 @@
 // frontend/src/lib/api.ts
 import { fetchWithAuth } from "./fetchWithAuth";
 
-const API_BASE = "/api/v1";
+export const API_BASE = "/api/v1";
 
 // === AUTH ===
 
@@ -47,7 +47,7 @@ export async function signupUser(username: string, email: string, password: stri
 // === BLOGS ===
 
 export async function fetchUserBlogs(page = 1, limit = 10) {
-    const response = await fetchWithAuth(`${API_BASE}/blogs/user?page=${page}&limit=${limit}`);
+    const response = await fetchWithAuth(`${API_BASE}/blogs?page=${page}&limit=${limit}`);
     if (!response.ok) {
         throw new Error("Failed to fetch user blogs");
     }
@@ -61,17 +61,22 @@ export async function fetchBlogById(id: string) {
     }
     return await response.json();
 }
-export async function uploadBlogContent(blogId: string, content: string) {
+export async function uploadBlogContent(blogId: string, file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+
     const response = await fetchWithAuth(`${API_BASE}/blogs/${blogId}/upload`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content }),
+        body: formData, // do NOT set Content-Type manually
     });
+
     if (!response.ok) {
-        throw new Error("Failed to upload blog content");
+        const error = await response.text();
+        throw new Error(`Failed to upload blog content: ${error}`);
     }
     return await response.json();
 }
+
 
 
 export async function createBlog(blogData: {
